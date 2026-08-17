@@ -22,6 +22,18 @@ app.get('/', (req, res) => {
   res.send('JY AI 서버가 정상적으로 실행 중입니다.');
 });
 
+// 진단용: 서버가 실제로 읽고 있는 키의 길이/앞뒤 일부만 안전하게 확인 (전체 키는 노출 안 함)
+app.get('/debug-key', (req, res) => {
+  const key = process.env.ANTHROPIC_API_KEY || '';
+  res.json({
+    exists: !!key,
+    length: key.length,
+    prefix: key.slice(0, 15),
+    suffix: key.slice(-6),
+    hasWhitespace: /\s/.test(key),
+  });
+});
+
 app.post('/', async (req, res) => {
   try {
     const { system, message } = req.body;

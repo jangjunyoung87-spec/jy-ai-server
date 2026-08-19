@@ -50,7 +50,11 @@ app.post('/', async (req, res) => {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-5',
-        max_tokens: 8000,
+        max_tokens: 16000,
+        // Claude Sonnet 5는 기본적으로 "적응형 사고(thinking)"가 켜져 있어서,
+        // thinking + 응답 텍스트가 max_tokens를 나눠 쓴다. 6개 채널 리포트처럼
+        // 답변 자체가 긴 작업은 thinking을 꺼서 max_tokens 전부를 응답 텍스트에 쓰게 한다.
+        thinking: { type: 'disabled' },
         system: system || '',
         messages: [{ role: 'user', content: message }],
       }),
